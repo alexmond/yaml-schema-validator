@@ -162,6 +162,17 @@ public class FilesOutput {
 	}
 
 	/**
+	 * Converts the validation results to SARIF JSON format, tagging the tool driver with
+	 * the given version.
+	 * @param version the tool version to record in the SARIF driver (from build-info)
+	 * @return SARIF JSON string representation of the validation results
+	 */
+	public String toSarifString(String version) {
+		FilesOutputToSarif sarifOutput = new FilesOutputToSarif(files, version);
+		return sarifOutput.toSarifString();
+	}
+
+	/**
 	 * Converts the validation results to an LLM-friendly report.
 	 * @param compact true for compiler-style diagnostic lines, false for structured JSON
 	 * @return LLM-oriented string representation of the validation results

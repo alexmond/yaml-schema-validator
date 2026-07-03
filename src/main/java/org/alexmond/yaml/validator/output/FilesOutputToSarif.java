@@ -1,7 +1,6 @@
 package org.alexmond.yaml.validator.output;
 
 import com.networknt.schema.output.OutputUnit;
-import lombok.RequiredArgsConstructor;
 import org.alexmond.yaml.validator.output.sarif.ArtifactContent;
 import org.alexmond.yaml.validator.output.sarif.ArtifactLocation;
 import org.alexmond.yaml.validator.output.sarif.Invocation;
@@ -31,10 +30,22 @@ import java.util.Map;
  * JSON structure that can be consumed by CI/CD tools, security scanners, and code
  * analysis systems.
  */
-@RequiredArgsConstructor
 public class FilesOutputToSarif {
 
+	private static final String UNKNOWN_VERSION = "unknown";
+
 	private final Map<String, OutputUnit> files;
+
+	private final String toolVersion;
+
+	public FilesOutputToSarif(Map<String, OutputUnit> files) {
+		this(files, UNKNOWN_VERSION);
+	}
+
+	public FilesOutputToSarif(Map<String, OutputUnit> files, String toolVersion) {
+		this.files = files;
+		this.toolVersion = toolVersion;
+	}
 
 	/**
 	 * Converts this FilesOutput to SARIF JSON format.
@@ -80,9 +91,9 @@ public class FilesOutputToSarif {
 	private Tool buildTool() {
 		ToolComponent driver = ToolComponent.builder()
 			.name("YAML Schema Validator")
-			.version("1.0.0")
+			.version(this.toolVersion)
 			.informationUri("https://github.com/alexmond/yj-schema-validator")
-			.semanticVersion("1.0.0")
+			.semanticVersion(this.toolVersion)
 			.rule(buildRule())
 			.build();
 

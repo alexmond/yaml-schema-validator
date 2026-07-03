@@ -27,8 +27,8 @@
             "text" : "Schema validation error"
           }
         } ],
-        "semanticVersion" : "1.0.0",
-        "version" : "1.0.0"
+        "semanticVersion" : "unknown",
+        "version" : "unknown"
       }
     }
   } ],
