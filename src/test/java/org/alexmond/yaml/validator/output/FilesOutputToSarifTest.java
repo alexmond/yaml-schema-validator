@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -50,6 +51,20 @@ class FilesOutputToSarifTest {
 		assertThat(run.get("results").isEmpty()).isTrue();
 		assertThat(run.get("invocations").get(0).get("executionSuccessful").asBoolean()).isTrue();
 		assertThat(run.get("invocations").get(0).get("exitCode").asInt()).isEqualTo(0);
+	}
+
+	@Test
+	@DisplayName("toSarifString(version): driver version comes from build-info, not a hardcoded value")
+	void testToSarifString_driverVersionFromBuildInfo() throws IOException {
+		OutputUnit outputUnit = new OutputUnit();
+		outputUnit.setValid(true);
+		FilesOutput filesOutput = new FilesOutput(Map.of("file1.yaml", outputUnit));
+
+		String sarifString = filesOutput.toSarifString("9.9.9");
+
+		JsonNode driver = objectMapper.readTree(sarifString).get("runs").get(0).get("tool").get("driver");
+		assertEquals("9.9.9", driver.get("version").asText());
+		assertEquals("9.9.9", driver.get("semanticVersion").asText());
 	}
 
 	@Test
@@ -127,9 +142,11 @@ class FilesOutputToSarifTest {
 		JsonNode driver = sarifJson.get("runs").get(0).get("tool").get("driver");
 
 		assertThat(driver.get("name").asText()).isEqualTo("YAML Schema Validator");
-		assertThat(driver.get("version").asText()).isEqualTo("1.0.0");
+		// No-arg (no build-info context) falls back to "unknown"; the real version is
+		// supplied via toSarifString(version) from BuildProperties at runtime.
+		assertThat(driver.get("version").asText()).isEqualTo("unknown");
 		assertThat(driver.get("informationUri").asText()).isEqualTo("https://github.com/alexmond/yj-schema-validator");
-		assertThat(driver.get("semanticVersion").asText()).isEqualTo("1.0.0");
+		assertThat(driver.get("semanticVersion").asText()).isEqualTo("unknown");
 
 		JsonNode rules = driver.get("rules");
 		assertThat(rules.isArray()).isTrue();

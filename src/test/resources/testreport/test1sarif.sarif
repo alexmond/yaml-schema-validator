@@ -5,9 +5,9 @@
     "tool" : {
       "driver" : {
         "name" : "YAML Schema Validator",
-        "version" : "1.0.0",
+        "version" : "unknown",
         "informationUri" : "https://github.com/alexmond/yj-schema-validator",
-        "semanticVersion" : "1.0.0",
+        "semanticVersion" : "unknown",
         "rules" : [ {
           "id" : "schema-validation",
           "shortDescription" : {

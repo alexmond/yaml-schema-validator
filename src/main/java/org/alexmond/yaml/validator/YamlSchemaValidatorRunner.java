@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.alexmond.yaml.validator.config.YamlSchemaValidatorConfig;
 import org.alexmond.yaml.validator.output.FilesOutput;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,13 @@ public class YamlSchemaValidatorRunner implements ApplicationRunner {
 	private final YamlSchemaValidator yamlSchemaValidator;
 
 	private final Environment environment;
+
+	/**
+	 * Build metadata (from the {@code build-info} Maven goal); optional so the runner
+	 * still works when constructed without a Spring context (e.g. in tests).
+	 */
+	@Autowired(required = false)
+	private BuildProperties buildProperties;
 
 	/**
 	 * Executes the validation process when the application starts. Handles command line
@@ -102,7 +111,7 @@ public class YamlSchemaValidatorRunner implements ApplicationRunner {
 			case JSON -> filesOutput.toJsonString();
 			case YAML -> filesOutput.toYamlString();
 			case JUNIT -> filesOutput.toJunitString();
-			case SARIF -> filesOutput.toSarifString();
+			case SARIF -> filesOutput.toSarifString(appVersion());
 			case LLM -> filesOutput.toLlmString(config.isCompact());
 			default -> filesOutput.toColoredString(config.isColor());
 		};
@@ -125,6 +134,15 @@ public class YamlSchemaValidatorRunner implements ApplicationRunner {
 	 * Displays usage instructions and available command line options. Exits the
 	 * application with status code 0 after printing the help message.
 	 */
+	/**
+	 * Resolves the tool version from the {@code build-info} metadata, falling back to
+	 * "unknown" when it is unavailable (e.g. no Spring context).
+	 * @return the application version
+	 */
+	private String appVersion() {
+		return (this.buildProperties != null) ? this.buildProperties.getVersion() : "unknown";
+	}
+
 	private void printHelp() {
 		String helpText = """
 				Usage: java -jar yaml-schema-validator.jar [options] [<file1> <file2> ...]
