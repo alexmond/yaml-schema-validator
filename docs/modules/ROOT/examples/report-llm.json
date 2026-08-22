@@ -1,0 +1,18 @@
+{
+  "summary" : {
+    "files" : 1,
+    "valid" : 0,
+    "invalid" : 1,
+    "errors" : 1
+  },
+  "results" : [ {
+    "file" : "src/test/resources/testdata/invalid.yaml",
+    "valid" : false,
+    "errors" : [ {
+      "pointer" : "/sample/boolean-sample",
+      "keyword" : "type",
+      "message" : "integer found, boolean expected",
+      "schemaLocation" : "urn:example:10#/properties/sample/properties/boolean-sample"
+    } ]
+  } ]
+}

@@ -1,6 +1,6 @@
 include::_header.adoc[]
 = YJ Schema Validator
-:description: CLI to validate YAML and JSON against JSON Schema (Draft 2019-09 and 2020-12), with colored, JSON, or JUnit output for CI pipelines.
+:description: CLI to validate YAML and JSON against JSON Schema (Draft 2019-09 and 2020-12), with colored, JSON, JUnit, SARIF, or LLM-friendly output for CI pipelines.
 
 image::sample.png[Sample colored output, role="center", width=600]
 
@@ -11,7 +11,9 @@ YJ Schema Validator is a lightweight Java CLI tool for validating YAML and JSON 
 == Features
 - *Dual Format Support*: Validates YAML *and* JSON files seamlessly.
 - *Remote Schemas*: Fetch via HTTP/HTTPS (with timeout & SSL options).
-- *Flexible Outputs*: Console (colored), JSON, YAML, JUnit (alpha) for CI.
+- *Flexible Outputs*: Console (colored), JSON, YAML, JUnit, SARIF for code scanning, and an LLM-friendly report for agents.
+- *Schema Autodetection*: Path-based lookup via the JSON Schema Store catalog when no schema is given.
+- *GitHub Action*: Reusable action runs the validator in CI with no Java setup.
 - *STDIN Support*: Pipe content directly to the validator using `stdin` or `-` filename.
 - *Batch Processing*: Multiple files; exits 0/1 for success/failure.
 - *Schema Override*: Ignore embedded `$schema`.
