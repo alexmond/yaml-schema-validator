@@ -2,6 +2,7 @@ package org.alexmond.yaml.validator.output;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import com.networknt.schema.output.OutputUnit;
@@ -24,7 +25,7 @@ import java.util.Map;
  * Formatting</a>
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(Include.NON_NULL)
 @JsonRootName("")
 @JsonPropertyOrder({ "valid", "files" })
 @JsonIgnoreProperties(ignoreUnknown = true)

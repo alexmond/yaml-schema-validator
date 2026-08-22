@@ -358,7 +358,7 @@
         "allow-additional-properties" : {
           "type" : "boolean",
           "description" : "Allow additional properties not defined in schema, currently not supported by intellij",
-          "default" : "true"
+          "default" : true
         },
         "description" : {
           "type" : "string",
@@ -368,16 +368,17 @@
         "enable-anchor-refs" : {
           "type" : "boolean",
           "description" : "Enable JSON Schema anchor references",
-          "default" : "false"
+          "default" : false
         },
         "enable-definition-refs" : {
           "type" : "boolean",
           "description" : "Enable JSON Schema definition references",
-          "default" : "true"
+          "default" : true
         },
         "exclude-anchors" : {
           "type" : "array",
           "description" : "List of classes to exclude from anchor generation",
+          "default" : "##default",
           "items" : {
             "type" : "string"
           }
@@ -399,7 +400,7 @@
         "missing-type-log" : {
           "type" : "boolean",
           "description" : "Enable logging for missing type information",
-          "default" : "false"
+          "default" : false
         },
         "schema-id" : {
           "type" : "string",
@@ -419,12 +420,12 @@
         "use-openapi" : {
           "type" : "boolean",
           "description" : "Enable OpenAPI annotations processing",
-          "default" : "true"
+          "default" : true
         },
         "use-validation" : {
           "type" : "boolean",
           "description" : "Enable validation annotations processing",
-          "default" : "true"
+          "default" : true
         }
       }
     },
@@ -465,36 +466,6 @@
         "file" : {
           "type" : "object",
           "properties" : {
-            "clean-history-on-start" : {
-              "type" : "boolean",
-              "description" : "Whether to clean the archive log files on startup. Only supported with the default logback setup.",
-              "deprecated" : true,
-              "default" : false,
-              "x-deprecation" : {
-                "replacement" : "logging.logback.rollingpolicy.clean-history-on-start",
-                "since" : "2.4.0"
-              }
-            },
-            "max-history" : {
-              "type" : "integer",
-              "description" : "Maximum number of archive log files to keep. Only supported with the default logback setup.",
-              "deprecated" : true,
-              "default" : 7,
-              "x-deprecation" : {
-                "replacement" : "logging.logback.rollingpolicy.max-history",
-                "since" : "2.4.0"
-              }
-            },
-            "max-size" : {
-              "type" : "string",
-              "description" : "Maximum log file size. Only supported with the default logback setup.",
-              "deprecated" : true,
-              "default" : "10MB",
-              "x-deprecation" : {
-                "replacement" : "logging.logback.rollingpolicy.max-file-size",
-                "since" : "2.4.0"
-              }
-            },
             "name" : {
               "type" : "string",
               "description" : "Log file name (for instance, `myapp.log`). Names can be an exact location or relative to the current directory."
@@ -502,16 +473,6 @@
             "path" : {
               "type" : "string",
               "description" : "Location of the log file. For instance, `/var/log`."
-            },
-            "total-size-cap" : {
-              "type" : "string",
-              "description" : "Total size of log backups to be kept. Only supported with the default logback setup.",
-              "deprecated" : true,
-              "default" : "0B",
-              "x-deprecation" : {
-                "replacement" : "logging.logback.rollingpolicy.total-size-cap",
-                "since" : "2.4.0"
-              }
             }
           }
         },
@@ -548,6 +509,47 @@
                   "items" : {
                     "type" : "string"
                   }
+                }
+              }
+            },
+            "rollingpolicy" : {
+              "type" : "object",
+              "properties" : {
+                "cron" : {
+                  "type" : "string",
+                  "description" : "Cron expression used when the strategy is 'cron'.",
+                  "default" : "0 0 0 * * ?"
+                },
+                "file-name-pattern" : {
+                  "type" : "string",
+                  "description" : "Pattern for rolled-over log file names.",
+                  "default" : "${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz"
+                },
+                "max-file-size" : {
+                  "type" : "string",
+                  "description" : "Maximum log file size.",
+                  "default" : "10MB"
+                },
+                "max-history" : {
+                  "type" : "integer",
+                  "description" : "Maximum number of archive log files to keep.",
+                  "default" : 7
+                },
+                "strategy" : {
+                  "type" : "string",
+                  "description" : "Rolling policy strategy.",
+                  "default" : "size",
+                  "enum" : [ "cron", "CRON", "size", "SIZE", "TIME", "size_and_time", "time", "SIZE_AND_TIME" ]
+                },
+                "time-interval" : {
+                  "type" : "integer",
+                  "description" : "Time based triggering interval when the strategy is 'time' or 'size-and-time'.",
+                  "default" : 1
+                },
+                "time-modulate" : {
+                  "type" : "boolean",
+                  "description" : "Whether to align the next rollover time to occur at the top of the interval when the strategy is time based.",
+                  "default" : false
                 }
               }
             }
@@ -612,16 +614,6 @@
               "type" : "string",
               "description" : "Appender pattern for log level.",
               "default" : "%5p"
-            },
-            "rolling-file-name" : {
-              "type" : "string",
-              "description" : "Pattern for rolled-over log file names. Supported only with the default Logback setup.",
-              "deprecated" : true,
-              "default" : "${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz",
-              "x-deprecation" : {
-                "replacement" : "logging.logback.rollingpolicy.file-name-pattern",
-                "since" : "2.4.0"
-              }
             }
           }
         },
@@ -910,6 +902,65 @@
               "type" : "object",
               "description" : "Jackson on/off features that affect the way Java objects are deserialized."
             },
+            "factory" : {
+              "type" : "object",
+              "$anchor" : "org.springframework.boot.jackson.autoconfigure.JacksonProperties:Factory",
+              "properties" : {
+                "constraints" : {
+                  "type" : "object",
+                  "$anchor" : "org.springframework.boot.jackson.autoconfigure.JacksonProperties:Factory:Constraints",
+                  "properties" : {
+                    "read" : {
+                      "type" : "object",
+                      "$anchor" : "org.springframework.boot.jackson.autoconfigure.JacksonProperties:Factory:Constraints:Read",
+                      "properties" : {
+                        "max-document-length" : {
+                          "type" : "integer",
+                          "description" : "Maximum allowed document length. A value less than or equal to zero indicates that any length is acceptable.",
+                          "default" : -1
+                        },
+                        "max-name-length" : {
+                          "type" : "integer",
+                          "description" : "Maximum name length.",
+                          "default" : 50000
+                        },
+                        "max-nesting-depth" : {
+                          "type" : "integer",
+                          "description" : "Maximum nesting depth. The depth is a count of objects and arrays that have not been closed.",
+                          "default" : 500
+                        },
+                        "max-number-length" : {
+                          "type" : "integer",
+                          "description" : "Maximum number length.",
+                          "default" : 1000
+                        },
+                        "max-string-length" : {
+                          "type" : "integer",
+                          "description" : "Maximum string length.",
+                          "default" : 100000000
+                        },
+                        "max-token-count" : {
+                          "type" : "integer",
+                          "description" : "Maximum allowed token count. A value less than or equal to zero indicates that any count is acceptable.",
+                          "default" : -1
+                        }
+                      }
+                    },
+                    "write" : {
+                      "type" : "object",
+                      "$anchor" : "org.springframework.boot.jackson.autoconfigure.JacksonProperties:Factory:Constraints:Write",
+                      "properties" : {
+                        "max-nesting-depth" : {
+                          "type" : "integer",
+                          "description" : "Maximum nesting depth. The depth is a count of objects and arrays that have not been closed.",
+                          "default" : 500
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
             "find-and-add-modules" : {
               "type" : "boolean",
               "description" : "Whether to find and add modules to the auto-configured JsonMapper.Builder using MapperBuilder.findAndAddModules(ClassLoader).",
@@ -941,6 +992,10 @@
               "type" : "string",
               "description" : "One of the constants on Jackson's PropertyNamingStrategies. Can also be a fully-qualified class name of a PropertyNamingStrategy implementation."
             },
+            "read" : {
+              "type" : "object",
+              "description" : "Jackson on/off token reader features common to multiple formats."
+            },
             "serialization" : {
               "type" : "object",
               "description" : "Jackson on/off features that affect the way Java objects are serialized."
@@ -957,6 +1012,10 @@
             "visibility" : {
               "type" : "object",
               "description" : "Jackson visibility thresholds that can be used to limit which methods (and fields) are auto-detected."
+            },
+            "write" : {
+              "type" : "object",
+              "description" : "Jackson on/off token writer features common to multiple formats."
             },
             "xml" : {
               "type" : "object",
@@ -1111,6 +1170,11 @@
                       }
                     }
                   }
+                },
+                "propagate-context" : {
+                  "type" : "boolean",
+                  "description" : "Whether to propagate the current context to task executions.",
+                  "default" : false
                 },
                 "shutdown" : {
                   "type" : "object",
