@@ -1,6 +1,7 @@
 package org.alexmond.yaml.validator.output.junit;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Builder;
 import lombok.Data;
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -38,7 +39,7 @@ public class Testcase {
 	/**
 	 * The failure details if the test case failed. Null if the test case passed.
 	 */
-	@JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(Include.NON_NULL)
 	@JacksonXmlProperty(localName = "failure")
 	private Failure failure;
 

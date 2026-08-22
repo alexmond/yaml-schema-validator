@@ -44,6 +44,36 @@ JUnit XML format for CI/CD integration:
 include::example$junitreport.xml[]
 ----
 
+=== SARIF Output
+
+SARIF 2.1.0, for upload to the GitHub Security tab via `github/codeql-action/upload-sarif`
+or any other code-scanning consumer. The `tool.driver.version` reports the running
+validator's build version.
+
+[source,json]
+----
+include::example$report.sarif[]
+----
+
+=== LLM Output
+
+A compact report shaped for agents and LLM consumption. By default it emits JSON with a
+summary block plus one entry per file:
+
+[source,json]
+----
+include::example$report-llm.json[]
+----
+
+With `--compact=true` it instead emits compiler-style diagnostic lines, one per error,
+preceded by a summary comment:
+
+[source,text]
+----
+# 0/1 files valid, 1 errors
+config/app.yaml: [type] /sample/boolean-sample: integer found, boolean expected
+----
+
 == Configuration
 
 [cols="1,2,1"]
@@ -51,8 +81,12 @@ include::example$junitreport.xml[]
 |Option |Description |Example
 
 |`--report-type`
-|Output format selection (`text`, `json`, `yaml`, `junit`, `sarif`)
+|Output format selection (`text`, `json`, `yaml`, `junit`, `sarif`, `llm`)
 |`--report-type=json`
+
+|`--compact`
+|For `--report-type=llm`, emit compiler-style diagnostic lines instead of JSON
+|`--compact=true`
 
 |`--report-file-name`
 |File to write output (defaults to stdout)

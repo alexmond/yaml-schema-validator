@@ -1,4 +1,4 @@
-:version: 3.0.0
+:version: 3.1.0
 = YJ Schema Validator
 
 image:https://img.shields.io/maven-central/v/org.alexmond/yj-schema-validator.svg?label=Maven%20Central[Maven Central,link=https://search.maven.org/artifact/org.alexmond/yj-schema-validator]
@@ -22,7 +22,7 @@ YJ Schema Validator is a lightweight Java CLI tool for validating YAML and JSON 
 
 - *Dual Format Support*: Validates YAML *and* JSON files seamlessly.
 - *Remote Schemas*: Fetch schemas via HTTP/HTTPS (with timeout & SSL ignore options).
-- *Flexible Outputs*: Console (colored), JSON, YAML, JUnit (alpha) for CI integration.
+- *Flexible Outputs*: Console (colored), JSON, YAML, JUnit, SARIF for code scanning, and an LLM-friendly report for agents.
 - *Multi-Document YAML*: Supports `---` separated YAML documents
 - *Batch Processing*: Validate multiple files in one run; exits 0 on success, 1 on failure.
 - *Schema Override*: Ignore embedded `$schema` in files for centralized control.
@@ -102,9 +102,9 @@ A reusable GitHub Action is published from this repo. It runs the validator insi
 container image built with Spring Boot Cloud Native Buildpacks (no Dockerfile), so no
 Java setup is needed in the consumer workflow. *Linux runners only.*
 
-[source,yaml]
+[source,yaml,subs=+attributes]
 ----
-- uses: alexmond/yj-schema-validator@v2
+- uses: alexmond/yj-schema-validator@{version}
   with:
     files: 'config/**/*.yaml'          # paths or globs (whitespace/newline separated)
     schema: schema.json                # path or URL; omit to use each file's own $schema
@@ -113,9 +113,9 @@ Java setup is needed in the consumer workflow. *Linux runners only.*
 
 Upload findings to the GitHub Security tab as SARIF:
 
-[source,yaml]
+[source,yaml,subs=+attributes]
 ----
-- uses: alexmond/yj-schema-validator@v2
+- uses: alexmond/yj-schema-validator@{version}
   with:
     files: 'config/**/*.yaml'
     schema: schema.json

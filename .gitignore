@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Test-run report output (written to CWD by the validator tests) ###
+/test1.*
+/test1junit.xml
+/validyaml.*
+/invalidyaml.*
+/multi3invalidyaml.*

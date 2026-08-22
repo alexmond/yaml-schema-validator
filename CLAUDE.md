@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-YJ Schema Validator is a Java CLI tool for validating YAML and JSON files against JSON Schema definitions (drafts 2019-09/2020-12). Built with Spring Boot 4.0.2, it uses Jackson 3.x for parsing and NetworkNT `json-schema-validator` 3.0.0 for validation. Current version: 2.0.2-SNAPSHOT.
+YJ Schema Validator is a Java CLI tool for validating YAML and JSON files against JSON Schema definitions (drafts 2019-09/2020-12). Built with Spring Boot 4.1.x, it uses Jackson 3.x for parsing and NetworkNT `json-schema-validator` 3.x for validation. Exact versions live in `pom.xml` — don't duplicate them here.
 
 ## Build & Test Commands
 
@@ -25,7 +25,7 @@ YJ Schema Validator is a Java CLI tool for validating YAML and JSON files agains
 ./mvnw -B package --file pom.xml -Pdefault --no-transfer-progress
 
 # Run the application
-java -jar target/yj-schema-validator-2.0.2-SNAPSHOT.jar [options] [files...]
+java -jar target/yj-schema-validator-*.jar [options] [files...]
 ```
 
 ## Architecture
@@ -48,9 +48,9 @@ The application follows a Spring Boot CLI runner pattern:
 
 Three tools enforce code quality at the `validate` phase (all fail the build):
 
-- **Spring Java Format** (`spring-javaformat-maven-plugin` 0.0.47) — tab indentation, Spring formatting conventions
-- **Checkstyle** (`maven-checkstyle-plugin` 3.6.0 + `spring-javaformat-checkstyle`) — file max 800 lines, method max 80 lines
-- **PMD** (`maven-pmd-plugin` 3.28.0) — best practices, code style, design, error prone, multithreading, performance rules
+- **Spring Java Format** (`spring-javaformat-maven-plugin`) — tab indentation, Spring formatting conventions
+- **Checkstyle** (`maven-checkstyle-plugin` + `spring-javaformat-checkstyle`) — file max 800 lines, method max 80 lines
+- **PMD** (`maven-pmd-plugin`) — best practices, code style, design, error prone, multithreading, performance rules
 
 ```bash
 # Auto-format code
