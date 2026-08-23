@@ -7,6 +7,7 @@ image:https://img.shields.io/github/actions/workflow/status/alexmond/yj-schema-v
 image:https://img.shields.io/badge/Java-17%2B-blue.svg[Java 17+,link=https://openjdk.org/]
 image:https://codecov.io/github/alexmond/yj-schema-validator/graph/badge.svg?token=R22SVVXZT6[Code Coverage,link=https://codecov.io/github/alexmond/yj-schema-validator]
 image:https://img.shields.io/badge/docs-alexmond.org-blue[Documentation,link=https://www.alexmond.org/yj-schema-validator/current/]
+image:https://img.shields.io/badge/changelog-{version}-blue[Changelog,link=https://www.alexmond.org/yj-schema-validator/current/CHANGELOG/]
 
 image::sample.png[]
 
